@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!-- 这个配置项是Mybatis 3.2才有的,用于显示日志.
+                          如果不配置这个,那么就需要直接把整个com.itmuch.*.persistence都配置成DEBUG级别,太不方便了
+                          参考文档:http://www.cnblogs.com/beiyeren/p/4196134.html
+        -->
+        <setting name="logPrefix" value="sqlLog." />
+    </settings>
+    <!-- 别名 -->
+    <typeAliases>
+
+    </typeAliases>
+
+    <plugins>
+        <!-- mybatis分页插件 -->
+        <plugin interceptor="com.github.pagehelper.PageHelper">
+            <property name="dialect" value="mysql" />
+        </plugin>
+    </plugins>
+</configuration>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<decorators defaultdir="/WEB-INF/layouts/">
+
+    <!-- 后台默认装饰页面, 在需要装饰的页面增加<meta name="decorator" content="back"/> -->
+    <decorator name="back" page="back/default.jsp" />
+    
+    <!-- 前台默认装饰页面, -->
+    <decorator name="front" page="front/default.jsp" />
+</decorators>

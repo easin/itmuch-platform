@@ -1,0 +1,1 @@
+FROM alauda/tomcat

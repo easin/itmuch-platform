@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.itmuch</groupId>
+        <artifactId>itmuch-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <groupId>com.itmuch.platform</groupId>
+    <artifactId>platform-parent</artifactId>
+    <name>platform-parent [项目父pom]</name>
+    <packaging>pom</packaging>
+
+    <properties>
+        <platform.version>1.0.0-SNAPSHOT</platform.version>
+        <itmuch-core.version>1.0.0-SNAPSHOT</itmuch-core.version>
+    </properties>
+
+    <modules>
+        <module>platform-biz</module>
+        <module>platform-war</module>
+        <module>platform-webservice-server</module>
+        <module>platform-webservice-client</module>
+        <module>platform-search</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>offical</id>
+            <name>官方repo</name>
+            <url>http://192.168.200.39:8081/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>Releases</id>
+            <name>Nexus Release Repository</name>
+            <url>http://192.168.200.39:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <repository>
+            <id>Snapshots</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://192.168.200.39:8081/nexus/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>offical2</id>
+            <name>offical repo</name>
+            <url>http://192.168.200.39:8081/nexus/content/groups/public/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>Releases2</id>
+            <name>Nexus Release Repository</name>
+            <url>http://192.168.200.39:8081/nexus/content/repositories/releases/</url>
+        </pluginRepository>
+        <pluginRepository>
+            <id>Snapshots2</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://192.168.200.39:8081/nexus/content/repositories/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+
+    <!-- 运行mvn deploy 后要发布的位置 -->
+    <distributionManagement>
+        <repository>
+            <id>Releases</id>
+            <name>Nexus Release Repository</name>
+            <url>http://192.168.200.39:8081/nexus/content/repositories/releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>Snapshots</id>
+            <name>Nexus Snapshot Repository</name>
+            <url>http://192.168.200.39:8081/nexus/content/repositories/snapshots/</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.itmuch</groupId>
+                <artifactId>itmuch-core</artifactId>
+                <version>${itmuch-core.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itmuch.platform</groupId>
+                <artifactId>platform-biz</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itmuch.platform</groupId>
+                <artifactId>platform-webservice-server</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itmuch.platform</groupId>
+                <artifactId>platform-webservice-client</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itmuch.platform</groupId>
+                <artifactId>platform-war</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.itmuch.platform</groupId>
+                <artifactId>platform-front</artifactId>
+                <version>${platform.version}</version>
+            </dependency>
+
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <configuration>
+                    <aggregate>true</aggregate>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <configuration>
+                    <configLocation>my_check.xml</configLocation>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flow xmlns="http://www.springframework.org/schema/webflow" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="
+      	http://www.springframework.org/schema/webflow
+      	http://www.springframework.org/schema/webflow/spring-webflow-2.4.xsd">
+
+    <var name="vo" class="com.donghuicredit.dxb.member.vo.MemberForgetVo" />
+
+    <view-state id="forget-step-1" view="front/member/login/forget-step-1" model="vo" validation-hints="'first'">
+        <attribute name="description" value="找回密码第一步" />
+        <transition on="submit" to="forget-step-1-action" />
+    </view-state>
+
+    <action-state id="forget-step-1-action">
+        <evaluate expression="forgetAction.forgetStep1(vo,flowRequestContext,messageContext)" />
+        <transition on="yes" to="forget-step-2" />
+        <transition on="no" to="forget-step-1" />
+    </action-state>
+
+
+    <view-state id="forget-step-2" view="front/member/login/forget-step-2" model="vo" validation-hints="'second'">
+        <transition on="submit" to="forget-step-2-action" />
+    </view-state>
+
+
+    <action-state id="forget-step-2-action">
+        <evaluate expression="forgetAction.forgetStep2(vo,flowRequestContext,messageContext)"></evaluate>
+        <transition on="yes" to="forget-step-3" />
+        <transition on="no" to="forget-step-2" />
+    </action-state>
+
+    <view-state id="forget-step-3" view="front/member/login/forget-step-3" model="vo" validation-hints="'third'">
+        <transition on="submit" to="forget-step-3-action" />
+    </view-state>
+
+    <action-state id="forget-step-3-action">
+        <evaluate expression="forgetAction.forgetStep3(vo,flowRequestContext,messageContext)"></evaluate>
+        <transition on="yes" to="forget-finish" />
+        <transition on="no" to="forget-step-3" />
+    </action-state>
+
+    <end-state id="forget-finish" view="externalRedirect:contextRelative:#{frontPath}/login"></end-state>
+</flow>

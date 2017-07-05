@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+
+    <!-- 超级天坑: 导入spring-webflow的配置文件一定要在mvc:default-servlet-handler之前,否则将会404 -->
+    <!-- 参考文档: http://clongjava.iteye.com/blog/1314108 -->
+    <import resource="webflow-config.xml" />
+
+    <!-- 静态资源映射 -->
+    <mvc:resources mapping="/static/**" location="/static/" cache-period="31536000" />
+
+    <!-- 定义无Controller的path<->view直接映射 -->
+    <mvc:view-controller path="/" view-name="redirect:${adminPath}" />
+
+    <!-- 支持对静态资源文件的访问 -->
+    <mvc:default-servlet-handler />
+
+    <!-- 加载配置属性文件 -->
+    <context:property-placeholder ignore-unresolvable="true" location="classpath:param.properties" />
+
+
+    <!-- 使用Annotation自动注册Bean,只扫描@Controller -->
+    <context:component-scan base-package="com.itmuch.platform.controller" use-default-filters="false"><!-- base-package 如果多个，用“,”分隔 -->
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+    </context:component-scan>
+
+
+    <mvc:interceptors>
+        <!-- 国际化操作拦截器 如果采用基于（请求/Session/Cookie）则必需配置 -->
+        <!-- 参考: http://www.cnblogs.com/liukemng/p/3750117.html -->
+        <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" />
+    </mvc:interceptors>
+
+    <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" />
+
+
+    <mvc:annotation-driven content-negotiation-manager="contentNegotiationManager" validator="validator">
+        <mvc:message-converters register-defaults="true">
+            <!-- 将StringHttpMessageConverter的默认编码设为UTF-8 -->
+            <bean class="org.springframework.http.converter.StringHttpMessageConverter">
+                <constructor-arg value="UTF-8" />
+            </bean>
+
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <!-- 格式化json -->
+                <property name="prettyPrint" value="true" />
+                <property name="objectMapper">
+                    <!-- 只序列化对象属性不为null的字段 -->
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <property name="serializationInclusion">
+                            <value type="com.fasterxml.jackson.annotation.JsonInclude.Include">NON_NULL</value>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+
+    <!-- REST中根据URL后缀自动判定Content-Type及相应的View -->
+    <!-- 默认是json视图, 当后缀是xxx.xml时, 表示返回的是xml, 注意实体需要加上@XmlRootElement注解 -->
+    <bean id="contentNegotiationManager" class="org.springframework.web.accept.ContentNegotiationManagerFactoryBean">
+        <property name="ignoreAcceptHeader" value="true" />
+        <property name="defaultContentType" value="application/json" />
+        <property name="mediaTypes">
+            <value>
+                json=application/json
+                xml=application/xml
+            </value>
+        </property>
+    </bean>
+
+
+    <!-- Enables plain Controllers (FlowController) -->
+    <bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
+
+
+    <!-- JSP视图解析器 定义文件的位置 -->
+    <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="prefix" value="/WEB-INF/views/jsp/" />
+        <property name="suffix" value=".jsp" />
+        <property name="order" value="1" />
+    </bean>
+
+
+    <!-- freeMarker视图解析器 -->
+    <bean id="viewResolverFtl" class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
+        <!-- viewClass重写目的：${ctx}获取项目的contextPath -->
+        <property name="viewClass" value="com.itmuch.core.ui.freemarker.MyFreeMarkerView" />
+        <property name="contentType" value="text/html; charset=utf-8" />
+        <property name="cache" value="false" />
+        <property name="suffix" value=".ftl" />
+        <property name="order" value="0" />
+    </bean>
+    <!-- freeMarkerConfigurer 配置见beans-freemarker -->
+
+
+    <!-- SpringMVC上传文件，配置MultipartResolver处理器 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="UTF-8" />
+        <!-- 指定所上传文件的总大小不能超过200KB。注意maxUploadSize属性的限制不是针对单个文件，而是所有文件的容量之和 -->
+        <property name="maxUploadSize" value="${maxUploadSize}" />
+    </bean>
+
+
+    <!-- 异常统一处理 -->
+    <bean class="com.itmuch.core.web.servlet.handler.CustomSimpleMappingExceptionResolver">
+        <property name="exceptionMappings">
+            <props>
+                <prop key="java.lang.Exception">common/error/exception</prop>
+            </props>
+        </property>
+    </bean>
+
+
+    <!-- 支持 Shiro对Controller的方法级AOP安全控制 begin -->
+    <!-- 参考文档: http://chenyiheng.iteye.com/blog/2105499 , http://blog.csdn.net/axzywan/article/details/7774469 -->
+    <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" depends-on="lifecycleBeanPostProcessor">
+        <property name="proxyTargetClass" value="true" />
+    </bean>
+    <bean class="org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor">
+        <property name="securityManager" ref="securityManager" />
+    </bean>
+    <!-- 支持shiro注解end -->
+</beans>

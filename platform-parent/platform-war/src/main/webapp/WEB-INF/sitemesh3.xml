@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemesh>
+
+    <!-- 对同一路径，启用多个装饰器 -->
+    <mapping>
+        <path>/admin*</path>
+        <decorator>/WEB-INF/layouts/back/default.jsp</decorator>
+    </mapping>
+
+
+    <!-- 排除掉无需装饰的路径 -->
+    <!-- 超级天坑：如果不排除/monitoring，会造成javamelody部署在linux下时无法访问的问题 -->
+    <mapping path="/monitoring*" exclude="true" />
+
+    <mapping path="/druid*" exclude="true" />
+    <mapping path="/static/*" exclude="true" />
+
+</sitemesh>

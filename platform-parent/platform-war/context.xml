@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<Context>  
+<Resource name="jdbc/icms" auth="Container"
+                type="com.mchange.v2.c3p0.ComboPooledDataSource" driverClass="com.mysql.jdbc.Driver"
+                jdbcUrl="jdbc:mysql://127.0.0.1:3306/crm?useUnicode=true&amp;characterEncoding=utf-8&amp;zeroDateTimeBehavior=convertToNull"
+                user="root" password="root"
+                factory="org.apache.naming.factory.BeanFactory"
+                factoryClassLocation="null"  idleConnectionTestPeriod="50" initialPoolSize="10" 
+                maxPoolSize="20" />
+</Context>

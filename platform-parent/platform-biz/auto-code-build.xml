@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--mybatis-generator:generate-->
+<project name="app" default="compiler">
+<target name="compiler">
+  <property name="dir.compiler.home" location="." />	
+  <exec executable="cmd" failonerror="true" dir="${dir.compiler.home}">
+     <arg line="/c mvn -X mybatis-generator:generate" />
+   </exec>
+</target>
+</project>

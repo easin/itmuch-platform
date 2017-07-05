@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+	  PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+	  "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+
+	<properties url="file:////F:\develop\GIT_CHECK\platform\platform-parent\platform-biz\util\generatorConfig.properties" />
+
+	<!-- 数据库驱动 -->
+	<classPathEntry location="./util/mysql-connector-java-5.1.13.jar" />
+
+	<!-- 生成代码的运行环境 -->
+	<context id="Tables" targetRuntime="MyBatis3">
+		<!-- <plugin type="org.mybatis.generator.plugins.RenameExampleClassPlugin">
+			<property name="searchString" value="Example$" />
+			<property name="replaceString" value="Criteria" />
+		</plugin>
+
+		<plugin type="com.itmuch.code.dao.mybatis.RenamePrimaryKeyPlugin">
+			<property name="searchString" value="PrimaryKey$" />
+			<property name="replaceString" value="Id" />
+		</plugin>
+
+		<plugin type="com.itmuch.code.dao.mybatis.MybatisSerializablePlugin"></plugin> -->
+		
+		<plugin type="org.mybatis.generator.plugins.SerializablePlugin"></plugin>
+
+		<!-- 设置注解信息 -->
+		<commentGenerator type="com.cnshangquan.code.dao.mybatis.MyCommentGenerator">
+			<!-- <property name="suppressDate" value="true"/> -->  
+            <property name="suppressAllComments" value="false"/>
+		</commentGenerator>
+
+		<jdbcConnection driverClass="${jdbc.driverClassName}" connectionURL="${jdbc.url}" userId="${jdbc.username}" password="${jdbc.password}">
+		</jdbcConnection>
+
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+		<!-- generate Model -->
+		<javaModelGenerator targetPackage="${package.name}.${module.name}.domain" targetProject=".\src\main\java">
+			<property name="enableSubPackages" value="true" />
+			<property name="trimStrings" value="false" />
+		</javaModelGenerator>
+
+
+
+		<!-- generate xml -->
+		<sqlMapGenerator targetPackage="${package.name}.${module.name}.persistence" targetProject=".\src\main\resources">
+			<property name="enableSubPackages" value="true" />
+		</sqlMapGenerator>
+
+		<!-- generate Mapper -->
+		 <javaClientGenerator type="com.cnshangquan.code.dao.mybatis.JavaMapperGenerator" targetPackage="${package.name}.${module.name}.persistence"
+			targetProject="..\..\..">
+			<property name="enableSubPackages" value="true" />
+		</javaClientGenerator> 
+
+
+		<table schema="" tableName="${table.name}" domainObjectName="${domain.object.name}" enableCountByExample="false" enableUpdateByExample="false"
+			enableDeleteByExample="false" enableSelectByExample="false" selectByExampleQueryId="false">
+            <!-- 忽略列，不生成bean 字段 -->  
+           <!--  <ignoreColumn column="create_by" /> -->
+        </table>
+
+
+	</context>
+</generatorConfiguration>

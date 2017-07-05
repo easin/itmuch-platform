@@ -1,0 +1,260 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.itmuch.platform</groupId>
+        <artifactId>platform-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>platform-war</artifactId>
+    <version>${platform.version}</version>
+    <packaging>war</packaging>
+    <name>platform-war [controller与页面]</name>
+    <url>http://www.itmuch.com</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.itmuch.platform</groupId>
+            <artifactId>platform-biz</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.itmuch.platform</groupId>
+            <artifactId>platform-webservice-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.itmuch.platform</groupId>
+            <artifactId>platform-webservice-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- 使用jstl1.2版本, standard.jar包无需引入 http://blog.csdn.net/z69183787/article/details/38066239 -->
+        <dependency>
+            <groupId>jstl</groupId>
+            <artifactId>jstl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.sitemesh</groupId>
+            <artifactId>sitemesh</artifactId>
+        </dependency>
+
+        <!-- 以下为Ueditor需要的依赖 -->
+        <dependency>
+            <groupId>commons-fileupload</groupId>
+            <artifactId>commons-fileupload</artifactId>
+            <version>1.3.1</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-codec</groupId>
+            <artifactId>commons-codec</artifactId>
+            <!-- <version>1.10</version> -->
+        </dependency>
+        <dependency>
+            <groupId>com.baidu.ueditor</groupId>
+            <artifactId>ueditor</artifactId>
+            <version> 1.1.1 </version>
+            <scope> system </scope>
+            <systemPath>${basedir}/src/main/webapp/static/scripts/ueditor1_4_3-utf8-jsp/jsp/lib/ueditor-1.1.1.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <version> 1.1.1 </version>
+            <scope> system </scope>
+            <systemPath>${basedir}/src/main/webapp/static/scripts/ueditor1_4_3-utf8-jsp/jsp/lib/json.jar</systemPath>
+        </dependency>
+        <!-- Ueditor依赖结束 -->
+
+
+
+        <!-- spring web start -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-webmvc</artifactId>
+        </dependency>
+        <!-- spring web end -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- Kaptcha -->
+        <dependency>
+            <groupId>com.github.penggle</groupId>
+            <artifactId>kaptcha</artifactId>
+        </dependency>
+        <!-- Kaptcha结束 -->
+
+        <dependency>
+            <groupId>com.github.abel533</groupId>
+            <artifactId>ECharts</artifactId>
+        </dependency>
+
+
+
+
+        <dependency>
+            <groupId>net.bull.javamelody</groupId>
+            <artifactId>javamelody-core</artifactId>
+        </dependency>
+    </dependencies>
+
+
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <properties>
+                <profile.path>env/dev</profile.path>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <profile.path>env/test</profile.path>
+            </properties>
+        </profile>
+        <profile>
+            <id>pre</id>
+            <properties>
+                <profile.path>env/pre</profile.path>
+            </properties>
+        </profile>
+        <profile>
+            <id>product</id>
+            <properties>
+                <profile.path>env/product</profile.path>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>39</id>
+            <properties>
+                <profile.path>env/39</profile.path>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>60</id>
+            <properties>
+                <profile.path>env/60</profile.path>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>home</id>
+            <properties>
+                <profile.path>env/home</profile.path>
+            </properties>
+        </profile>
+    </profiles>
+
+
+
+    <build>
+        <finalName>platform-war</finalName>
+        <resources>
+            <resource>
+                <directory>${profile.path}</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.xml</include>
+                    <include>**/*.properties</include>
+                    <include>**/*.tld</include>
+                </includes>
+            </resource>
+        </resources>
+
+        <plugins>
+            <!-- tomcat插件 -->
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <configuration>
+                    <uriEncoding>UTF-8</uriEncoding>
+                    <path>/platform</path>
+                    <port>7777</port>
+
+                    <httpsPort>9443</httpsPort>
+                    <keystoreFile>${project.basedir}/localhost.keystore</keystoreFile>
+                    <keystorePass>123456</keystorePass>
+                </configuration>
+            </plugin>
+            <!-- jetty插件 需要jdk1.8及以上. 只测试了http://xxx:8080 可以正常访问, https没测试 -->
+            <!-- 参考: http://www.oschina.net/question/17793_132147 -->
+            <!-- 参考: http://my.oschina.net/cokolin/blog/409164 -->
+            <!-- You need to use Maven 3 and Java 1.8 for this plugin. -->
+            <!-- 详见: http://www.eclipse.org/jetty/documentation/current/jetty-maven-plugin.html#configuring-jetty-container -->
+            <plugin>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-maven-plugin</artifactId>
+                <configuration>
+                    <connectors>
+                        <connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">
+                            <port>8080</port>
+                        </connector>
+                        <connector implementation="org.eclipse.jetty.server.ssl.SslSelectChannelConnector">
+                            <port>9443</port>
+                            <keystore>${project.basedir}/localhost.keystore</keystore>
+                            <keyPassword>123456</keyPassword>
+                        </connector>
+                    </connectors>
+                    <webAppConfig>
+                        <contextPath>/${project.artifactId}</contextPath>
+                    </webAppConfig>
+                    <scanIntervalSeconds>0</scanIntervalSeconds>
+                    <!-- 指定监控的扫描时间间隔，0为关闭jetty自身的热部署，主要是为了使用jrebel -->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+    <reporting>
+        <plugins>
+            <!-- findbugs -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <version>2.5.2</version>
+                <configuration>
+                    <findbugsXmlOutput>true</findbugsXmlOutput>
+                    <findbugsXmlWithMessages>true</findbugsXmlWithMessages>
+                    <xmlOutput>true</xmlOutput>
+                </configuration>
+            </plugin>
+            <!-- pmd -->
+            <plugin>
+                <artifactId>maven-pmd-plugin</artifactId>
+                <version>3.4</version>
+                <reportSets>
+                    <reportSet>
+                        <reports>
+                            <report>pmd</report>
+                            <report>cpd</report>
+                        </reports>
+                    </reportSet>
+                </reportSets>
+            </plugin>
+        </plugins>
+    </reporting>
+    <!-- 报告结束 -->
+</project>

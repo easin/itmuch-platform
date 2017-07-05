@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <!-- <pattern>%date %thread %-5level %logger %X{ip} %msg %n</pattern> -->
+            <pattern>%date{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- 按照每天生成SQL日志文件 -->
+    <appender name="SQL" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${catalina.home}/logs/platform-log/sql%d{yyyy-MM-dd}.log</FileNamePattern>
+            <!-- 保留 30天数据，默认无限-->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="MONGO" class="com.itmuch.core.log.MongoDBAppender">
+        <connectionSource class="com.itmuch.core.log.MongoDBConnectionSource">
+            <uri>mongodb://platform:123456@116.255.181.60/platform</uri>
+            <db>platform</db>
+            <collection>logs</collection>
+        </connectionSource>
+    </appender>
+
+
+    <!-- 需要记录日志的包 -->
+    <logger name="com.itmuch" level="INFO" />
+    <!-- 开发环境显示日志. -->
+    <logger name="sqlLog" level="WARN" />
+    <!--
+        以下用于真实环境显示SQL日志,这个sqlLog跟mybatis-config.xml里面的logPrefix相对应;
+        其中additivity=false表示不向上级输入,如果不配置这个,则root以及自己都会打印sql.
+        <logger name="sqlLog" level="DEBUG" additivity="false">
+        <appender-ref ref="SQL" />
+        </logger> -->
+    <logger name="ch.qos.logback" level="ERROR" />
+    <logger name="org.springframework" level="ERROR" />
+    <logger name="org.apache.cxf" level="ERROR" />
+    <logger name="net.sf.ehcache" level="ERROR" />
+    <logger name="org.apache.commons" level="ERROR" />
+    <logger name="freemarker" level="ERROR" />
+    <logger name="org.dozer" level="ERROR" />
+
+    <logger name="com.alibaba.druid.filter.stat.StatFilter" level="DEBUG" />
+
+    <root level="WARN">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="MONGO" />
+    </root>
+</configuration>

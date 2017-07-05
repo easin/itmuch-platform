@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jaxrs="http://cxf.apache.org/jaxrs-client" xmlns:cxf="http://cxf.apache.org/core"
+    xsi:schemaLocation="http://cxf.apache.org/jaxrs-client http://cxf.apache.org/schemas/jaxrs-client.xsd 
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+    http://cxf.apache.org/core http://cxf.apache.org/schemas/core.xsd"
+    default-lazy-init="true">
+
+
+    <description>CXF的Restful的client配置</description>
+
+    <jaxrs:client id="restUserClient" serviceClass="com.itmuch.platform.webservice.client.jaxrs.IRestUserClient" address="http://localhost:7777/platform/cxf/jaxrs"
+        inheritHeaders="true" threadSafe="true">
+        <jaxrs:headers>
+            <!-- 接受的格式,可以不配置, 如果配置的话,必须与platform-webservice-server中的beans-cxf-jaxrs.xml中的相同 -->
+            <entry key="Accept" value="application/xml"></entry>
+        </jaxrs:headers>
+    </jaxrs:client>
+</beans>
+<!-- 参考文档: http://blog.csdn.net/fanyuna/article/details/8624224 -->
+<!-- 其他配置方法: 另外还有基于Webclient以及基于JAXRSClientFactory的配置方法: http://git.oschina.net/Percy0601/training-cxf-rest-spring/tree/master -->
+
+<!-- 坑: cxf3 引入http://cxf.apache.org/jaxrs 以及网上写的namespace等还是报错,要改成http://cxf.apache.org/jaxrs-client -->
+<!-- 原因: CXF WebClient and proxy code has been moved to a new cxf-rt-rs-client module. -->
+<!-- Also, jaxrs:client elements for injecting proxies have had the namespace changed from from "http://cxf.apache.org/jaxrs" to "http://cxf.apache.org/jaxrs-client". -->

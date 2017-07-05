@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.itmuch.platform.admin.persistence.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.itmuch.platform.admin.domain.Role">
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="office_id" property="officeId" jdbcType="INTEGER" />
+        <result column="name" property="name" jdbcType="VARCHAR" />
+        <result column="enname" property="enname" jdbcType="VARCHAR" />
+        <result column="role_type" property="roleType" jdbcType="TINYINT" />
+        <result column="sys_flag" property="sysFlag" jdbcType="TINYINT" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="create_id" property="createId" jdbcType="INTEGER" />
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+        <result column="update_id" property="updateId" jdbcType="INTEGER" />
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+        <result column="remark" property="remark" jdbcType="VARCHAR" />
+        <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
+    </resultMap>
+    <sql id="Base_Column_List">
+        id, office_id, name, enname, role_type, sys_flag, status, create_id, create_time,
+        update_id, update_time, remark, del_flag
+    </sql>
+    <select id="selectById" resultMap="BaseResultMap" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List" />
+        from f_role
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    <sql id="Role_Column_List">
+        a.id,
+        a.office_id AS officeId,
+        a.name,
+        a.enname,
+        a.role_type AS roleType,
+        a.sys_flag AS sysFlag,
+        a.status,
+        a.create_id AS createId,
+        a.create_time AS createTime,
+        a.update_id AS updateId,
+        a.update_time AS updateTime,
+        a.remark AS remarks,
+        a.del_flag AS delFlag,
+        b.id as "office.id",
+        b.name as "office.name"
+    </sql>
+    <select id="listAll" resultType="Role">
+        select
+        <include refid="Role_Column_List" />
+        from f_role a
+        left join f_office b
+        on a.office_id = b.id
+        where a.del_flag = 0
+    </select>
+
+    <select id="selectMenuIdsByRoleId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select menu_id from f_role_menu
+        where role_id = #{roleId}
+    </select>
+
+    <delete id="deleteRoleMenuById" parameterType="java.lang.Integer">
+
+        delete from f_role_menu
+        where role_id = #{roleId}
+    </delete>
+
+    <select id="selectCountAdminIdByRoleId" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select count(1) from f_admin_role
+        where role_id = #{roleId}
+    </select>
+    <delete id="deleteByIdReal" parameterType="java.lang.Integer">
+        delete from f_role
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        update f_role set del_flag = 1
+        where id = #{id,jdbcType=INTEGER}
+    </delete>
+    <insert id="insert" parameterType="com.itmuch.platform.admin.domain.Role" useGeneratedKeys="true" keyProperty="id">
+        insert into f_role
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="officeId != null">
+                office_id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="enname != null">
+                enname,
+            </if>
+            <if test="roleType != null">
+                role_type,
+            </if>
+            <if test="sysFlag != null">
+                sys_flag,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createId != null">
+                create_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateId != null">
+                update_id,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+            <if test="remark != null">
+                remark,
+            </if>
+            <if test="delFlag != null">
+                del_flag,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=INTEGER},
+            </if>
+            <if test="officeId != null">
+                #{officeId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="enname != null">
+                #{enname,jdbcType=VARCHAR},
+            </if>
+            <if test="roleType != null">
+                #{roleType,jdbcType=TINYINT},
+            </if>
+            <if test="sysFlag != null">
+                #{sysFlag,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                #{status,jdbcType=TINYINT},
+            </if>
+            <if test="createId != null">
+                #{createId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateId != null">
+                #{updateId,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                #{delFlag,jdbcType=TINYINT},
+            </if>
+        </trim>
+    </insert>
+    <insert id="insertRoleMenu">
+        insert into f_role_menu
+        (role_id, menu_id)
+        values
+        <foreach collection="menuIds" item="item" index="index" separator=",">
+            (#{roleId},#{item})
+        </foreach>
+
+    </insert>
+    <update id="updateById" parameterType="com.itmuch.platform.admin.domain.Role">
+        update f_role
+        <set>
+            <if test="officeId != null">
+                office_id = #{officeId,jdbcType=INTEGER},
+            </if>
+            <if test="name != null">
+                name = #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="enname != null">
+                enname = #{enname,jdbcType=VARCHAR},
+            </if>
+            <if test="roleType != null">
+                role_type = #{roleType,jdbcType=TINYINT},
+            </if>
+            <if test="sysFlag != null">
+                sys_flag = #{sysFlag,jdbcType=TINYINT},
+            </if>
+            <if test="status != null">
+                status = #{status,jdbcType=TINYINT},
+            </if>
+            <if test="createId != null">
+                create_id = #{createId,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="updateId != null">
+                update_id = #{updateId,jdbcType=INTEGER},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+            <if test="remark != null">
+                remark = #{remark,jdbcType=VARCHAR},
+            </if>
+            <if test="delFlag != null">
+                del_flag = #{delFlag,jdbcType=TINYINT},
+            </if>
+        </set>
+        where id = #{id,jdbcType=INTEGER}
+    </update>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd" default-lazy-init="true">
+
+    <!-- com.itmuch.core.web.xss.CustomFreeMarkerConfigurer用于防止XSS攻击, 由于使用后, 无法导入标签库, 暂时取消. -->
+    <!-- 参考文档: http://yshjava.iteye.com/blog/1870320 -->
+    <!-- ################# -->
+    <!-- com.itmuch.core.ShiroTagFreeMarkerConfigurer 用于在freemarker中使用shiro标签 -->
+    <!-- 参考文档: http://my.oschina.net/zhk/blog/194163 -->
+    <bean id="freeMarkerConfigurer" class="com.itmuch.core.ui.freemarker.ShiroTagFreeMarkerConfigurer">
+        <property name="templateLoaderPath">
+            <value>/WEB-INF/views/freemarker/</value>
+        </property>
+        <property name="freemarkerVariables">
+            <map>
+                <entry key="xml_escape" value-ref="fmXmlEscape" />
+                <!-- 获取后台路径 参考文档: http://songjianyong.iteye.com/blog/1460314 -->
+                <entry key="adminPath" value="${adminPath}" />
+            </map>
+        </property>
+        <property name="defaultEncoding">
+            <value>utf-8</value>
+        </property>
+        <property name="freemarkerSettings">
+            <props>
+                <!-- 用来指定更新模版文件的间隔时间，单位秒 -->
+                <prop key="template_update_delay">0</prop>
+                <prop key="auto_import">/spring.ftl as spring</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="fmXmlEscape" class="freemarker.template.utility.XmlEscape" />
+
+</beans>

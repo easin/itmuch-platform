@@ -1,0 +1,11 @@
+登陆成功返回更多信息:
+http://wenku.baidu.com/view/bd62441cf242336c1eb95ebc.html
+
+
+记住我: 
+https://wiki.jasig.org/display/CASUM/Remember+Me
+https://github.com/pumadong/cas-server-3.5.2
+
+
+界面美化: 
+https://github.com/pumadong/cas-server-3.5.2
